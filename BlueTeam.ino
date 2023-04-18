@@ -1,6 +1,12 @@
 #include <Wire.h>
+#include <Adafruit_NeoPixel.h>
 #include <LiquidCrystal_I2C.h>
 LiquidCrystal_I2C lcd(0x27,16,2);
+
+#define LED_PIN 13 // specify the pin the LED strip is connected to
+#define LED_COUNT 10
+
+Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 //Set up inputs for the IR Sensor:
 const int sensorPin = 5;
@@ -17,6 +23,8 @@ int buttonState = 0;
 
 void setup() {
   Serial.begin(9600);
+  strip.begin();
+  strip.show();
   pinMode(sensorPin, INPUT_PULLUP);
   pinMode(buzzerPin, OUTPUT);
   pinMode(buttonPin, INPUT);
@@ -38,8 +46,6 @@ void loop() {
         beamBroken = true;
 // Increment the break count
         counterBreak();
-// Goal Audio
-        goalAudio();
     }
   }
   
@@ -82,17 +88,30 @@ void loop() {
 //Down below are methods I created to make my code less messy
 
 void successAudio() {
+      strip.fill(0x00CCCC,0,10);
       digitalWrite(buzzerPin, HIGH); // Turn the buzzer on
+      strip.show();
+      strip.clear();
       delay(75); // Wait for 0.5 second
       digitalWrite(buzzerPin, LOW); // Turn the buzzer off
+      strip.show();
+      strip.fill(0x00CCCC,0,10);
       delay(75);
       digitalWrite(buzzerPin, HIGH); // Turn the buzzer on
+      strip.show();
+      strip.clear();
       delay(75);
       digitalWrite(buzzerPin, LOW); // Turn the buzzer off
+      strip.show();
+      strip.fill(0x00CCCC,0,10);
       delay(75);
       digitalWrite(buzzerPin, HIGH); // Turn the buzzer on
+      strip.show();
+      strip.clear();
       delay(75);
       digitalWrite(buzzerPin, LOW); // Turn the buzzer off
+      strip.show();
+      strip.fill(0x00CCCC,0,10);
       delay(100);
 }
 
@@ -121,4 +140,16 @@ void counterBreak() {
       lcd.backlight();
       lcd.setCursor(11,1);
       lcd.print(breakCount);
+      blueColor();
+}
+
+void blueColor(){
+  goalAudio();
+  for (int i = 0; i <= 10; i++) {
+    strip.fill(0x00CCCC,0,10);
+    strip.show();
+    strip.clear();
+    delay(50);
+    strip.show();
+  }
 }
